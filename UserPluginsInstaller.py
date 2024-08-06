@@ -248,7 +248,8 @@ print("All dependencies are installed; Git Version " + git_version + ", Node Ver
 print("Cloning Vencord Repository...")
 os.system("git clone https://github.com/Vendicated/Vencord")
 os.chdir(cwd + "\\Vencord")
-os.system("git config --global --add safe.directory " + cwd + "\\Vencord")
+temp_cwd = cwd.replace("\\", "/")
+os.system("git config --global --add safe.directory " + temp_cwd + "/Vencord")
 
 print("Running 'pnpm install --frozen-lockfile'")
 os.system("pnpm install --frozen-lockfile")
