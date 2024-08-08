@@ -1,0 +1,2 @@
+; Paste here the git links of the plugins you want to install
+; Exemple : https://github.com/exemple/exemple.git
