@@ -8,8 +8,6 @@ import psutil
 import ctypes
 import stat
 
-def clear():
-    os.system("cls") if os.name == "nt" else os.system("clear")
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
@@ -104,6 +102,9 @@ def install():
     os.chdir(cwd + "\\Vencord\\src\\userplugins")
     if url == '':
         print("Installing from list...")
+        if not os.path.exists(cwd + "\\list.txt"):
+            print("<ERROR> 'list.txt' does not exist! Program exiting.")
+            exit(0)
         with open('..\\..\\..\\list.txt', "r") as file:
             file_content = file.readlines()
             file_content.remove("\n")
@@ -131,7 +132,6 @@ def list_installed():
             dir_names = [entry.name for entry in entries if entry.is_dir()]
             for name in dir_names:
                 iterator = iterator + 1
-                name = name.split("vc-")[1] if "vc-" in name else name
                 print(str(iterator) + " >> " + name)
             input("\nPress Enter to go back to the menu")
     except PermissionError:
@@ -155,7 +155,6 @@ def update():
     print("1 >> All")
     for name in dir_names:
         iterator = iterator + 1
-        name = name.split("vc-")[1] if "vc-" in name else name
         print(str(iterator) + " >> " + name)
     to_update = int(input(">> "))
     update_all = False
@@ -252,11 +251,10 @@ def uninstall():
 def vencordinstaller():
     os.chdir(cwd + "\\Vencord")
     os.system("pnpm inject")
-    
 
 def menu():
-    menu = ConsoleMenu("Vencord User Plugins Installer", "Created by chunkbanned & Enhanced by Plunder")
-    install_plugin = FunctionItem("Install a Plugin via Git", install)
+    menu = ConsoleMenu("Vencord User Plugins Installer", "Created by chunkbanned\nContributors: Plunder283")
+    install_plugin = FunctionItem("Install a Plugin", install)
     list_plugin = FunctionItem("List Installed plugins", list_installed)
     uninstall_plugin = FunctionItem("Uninstall a Plugin", uninstall)
     update_plugin = FunctionItem("Update a Plugin", update)
@@ -269,8 +267,6 @@ def menu():
     menu.show()
     exit(0)
 
-
-    
 if vencord_dir == True:
     menu()
 
@@ -287,9 +283,9 @@ os.system("pnpm install --frozen-lockfile")
 
 print("Building... (this may take a while depending on your computer specifications)")
 os.system("pnpm build")
-clear()
+os.system("cls") if os.name == "nt" else os.system("clear")
 print("Running 'pnpm inject'")
-print("⚠️ This will open an installer which you should choose on Install Vencord")
+print("⚠️ This will open an installer which you should choose the Install Vencord option")
 os.system("pnpm inject")
 
 print("Creating userplugins Folder")
@@ -297,6 +293,4 @@ os.chdir(cwd + "\\Vencord\\src")
 os.system("mkdir userplugins")
 os.chdir(cwd)
 os.system("plugins")
-
-print("Finished Install")
 menu()
