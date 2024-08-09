@@ -1,12 +1,21 @@
 # VCUserPluginsInstaller
+
 This script will help people install custom plugins to Vencord.
 
-## I do not take responsibility for any inconveniences that may happen when using this script, **you use this script at your own risk**!
+## I do not take responsibility for any inconveniences that may happen when using this script, you use this script at your own risk
 
-Project Contributors:
-  - Plunder283
+## Requirements
 
-# How to use
+- [Python](https://www.python.org/downloads/)
+- [Git](https://git-scm.com/downloads)
+- [Node.js](https://nodejs.org/en/download/package-manager)
+- [pnpm](https://pnpm.io/installation)
+
+## Project Contributors
+
+- Plunder283
+
+## How to use
 
 1. Clone the repository
 2. Uninstall Vencord if you have it installed already (this will make a custom install for it)
