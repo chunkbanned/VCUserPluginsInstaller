@@ -1,12 +1,13 @@
 import os
+import sys
 import subprocess
 import shutil
 import platform
-from consolemenu import *
-from consolemenu.items import *
 import psutil
 import ctypes
 import stat
+from consolemenu import ConsoleMenu
+from consolemenu.items import FunctionItem
 
 def is_admin():
     try:
@@ -47,7 +48,6 @@ def is_pnpm_installed():
         else:
             result = subprocess.run(['which', 'pnpm'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             pnpm_path = result.stdout.decode().strip()
-
         if pnpm_path:
             return pnpm_path
         else:
@@ -62,20 +62,20 @@ pnpm_installed = is_pnpm_installed();
 cwd = os.getcwd()
 vencord_dir = os.path.exists(cwd + "\\Vencord")
 
-if is_admin() == False:
+if is_admin() is False:
     print("Please run this script with administrator permissions")
     print("If you think this is sketchy, please have a look at the source code yourself!")
-    exit(0)
+    sys.exit(0)
 
 if not git_installed or not node_installed or not pnpm_installed:
     print("One of the main dependencies is not installed!")
     if not git_installed:
-        print("Git must be installed for this program to run; https://git-scm.com/downloads")
+        print("Git must be installed for this program to run https://git-scm.com/downloads")
     elif not node_installed:
-        print("Node must be installed for this program to run; https://nodejs.org/en/download/package-manager")
+        print("Node must be installed for this program to run https://nodejs.org/en/download/package-manager")
     elif not pnpm_installed:
-        print("pnpm must be installed for this program to run; https://pnpm.io/installation")
-    exit(0)
+        print("pnpm must be installed for this program to run https://pnpm.io/installation")
+    sys.exit(0)
 
 def remove_directory(dir_path):
     # Check if the directory exists
@@ -104,7 +104,7 @@ def install():
         print("Installing from list...")
         if not os.path.exists(cwd + "\\list.txt"):
             print("<ERROR> 'list.txt' does not exist! Program exiting.")
-            exit(0)
+            sys.exit(0)
         with open(cwd + "\\list.txt", 'r') as file:
             for line in file:
                 line = line.strip()
@@ -136,7 +136,7 @@ def list_installed():
             input("\nPress Enter to go back to the menu")
     except PermissionError:
         print("Error! Permission Error, cannot get all dirs")
-        exit(0)
+        sys.exit(0)
 
 def update():
     dir_names = []
@@ -145,7 +145,7 @@ def update():
             dir_names = [entry.name for entry in entries if entry.is_dir()]
     except PermissionError:
         print("Error! Permission Error, cannot get all dirs")
-        exit(0)
+        sys.exit(0)
 
     iterator = 1
     if dir_names == []:
@@ -202,7 +202,7 @@ def uninstall():
             dir_names = [entry.name for entry in entries if entry.is_dir()]
     except PermissionError:
         print("Error! Permission Error, cannot get all dirs")
-        exit(0)
+        sys.exit(0)
 
     iterator = 1
     if dir_names == []:
@@ -234,7 +234,7 @@ def uninstall():
             except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 pass
         print("Uninstalled all plugins successfully!")
-        exit(0)
+        sys.exit(0)
     else:
         for name in dir_names:
             if iterator == to_uninstall:
@@ -248,7 +248,7 @@ def uninstall():
                     except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                         pass
                 print("Uninstalled " + name + " successfully!")
-                exit(0)
+                sys.exit(0)
 
 def vencordinstaller():
     os.chdir(cwd + "\\Vencord")
@@ -267,9 +267,9 @@ def menu():
     menu.append_item(uninstall_plugin)
     menu.append_item(vencord_installer)
     menu.show()
-    exit(0)
+    sys.exit(0)
 
-if vencord_dir == True:
+if vencord_dir is True:
     menu()
 
 print("All dependencies are installed; Git Version " + git_version + ", Node Version " + node_version)
