@@ -97,10 +97,22 @@ def remove_directory(dir_path):
         print(f"Directory '{dir_path}' does not exist.")
 
 def install():
-    print("Please enter the Git URL")
+    print("Please enter the Git URL or press enter to install from list")
     url = input(">> ")
     os.chdir(cwd + "\\Vencord\\src\\userplugins")
-    os.system("git clone " + url)
+    if url == '':
+        print("Installing from list...")
+        if not os.path.exists(cwd + "\\list.txt"):
+            print("<ERROR> 'list.txt' does not exist! Program exiting.")
+            exit(0)
+        with open('..\\..\\..\\list.txt', "r") as file:
+            file_content = file.readlines()
+            file_content.remove("\n")
+            for line in file_content:
+                if ";" not in line:
+                    os.system("git clone " + line)
+    else:
+        os.system("git clone " + url)
     os.chdir(cwd + "\\Vencord")
     os.system("pnpm build")
     for process in psutil.process_iter(attrs=['pid', 'name']):
@@ -110,7 +122,21 @@ def install():
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
     print("Finished! Please restart your Discord to apply changes.")
-    exit(0)
+    input("Or press Enter to go back to the menu")
+
+def list_installed():
+    dir_names = []
+    iterator = 0
+    try:
+        with os.scandir(cwd + "\\Vencord\\src\\userplugins") as entries:
+            dir_names = [entry.name for entry in entries if entry.is_dir()]
+            for name in dir_names:
+                iterator = iterator + 1
+                print(str(iterator) + " >> " + name)
+            input("\nPress Enter to go back to the menu")
+    except PermissionError:
+        print("Error! Permission Error, cannot get all dirs")
+        exit(0)
 
 def update():
     dir_names = []
@@ -151,7 +177,7 @@ def update():
             except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 pass
         print("Updated all plugins successfully!")
-        exit(0)
+        input("Press Enter to go back to the menu")
     else:
         for name in dir_names:
             if iterator == to_update:
@@ -166,7 +192,7 @@ def update():
                     except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                         pass
                 print("Updated " + name + " successfully!")
-                exit(0)
+                input("Press Enter to go back to the menu")
 
 def uninstall():
     dir_names = []
@@ -225,15 +251,16 @@ def uninstall():
 def vencordinstaller():
     os.chdir(cwd + "\\Vencord")
     os.system("pnpm inject")
-    exit(0)
 
 def menu():
-    menu = ConsoleMenu("Vencord User Plugins Installer", "Created by chunkbanned")
-    install_plugin = FunctionItem("Install a Plugin via Git", install)
-    uninstall_plugin = FunctionItem("Uninstall A Plugin", uninstall)
-    update_plugin = FunctionItem("Update A Plugin", update)
+    menu = ConsoleMenu("Vencord User Plugins Installer", "Created by chunkbanned\nContributors: Plunder283")
+    install_plugin = FunctionItem("Install a Plugin", install)
+    list_plugin = FunctionItem("List Installed plugins", list_installed)
+    uninstall_plugin = FunctionItem("Uninstall a Plugin", uninstall)
+    update_plugin = FunctionItem("Update a Plugin", update)
     vencord_installer = FunctionItem("Open VencordInstaller (to uninstall, repair etc)", vencordinstaller)
     menu.append_item(install_plugin)
+    menu.append_item(list_plugin)
     menu.append_item(update_plugin)
     menu.append_item(uninstall_plugin)
     menu.append_item(vencord_installer)
@@ -256,8 +283,9 @@ os.system("pnpm install --frozen-lockfile")
 
 print("Building... (this may take a while depending on your computer specifications)")
 os.system("pnpm build")
-
-print("Running 'pnpm inject' (This will open an installer which you should choose on Install Vencord)")
+os.system("cls") if os.name == "nt" else os.system("clear")
+print("Running 'pnpm inject'")
+print("⚠️ This will open an installer which you should choose the Install Vencord option")
 os.system("pnpm inject")
 
 print("Creating userplugins Folder")
@@ -265,6 +293,4 @@ os.chdir(cwd + "\\Vencord\\src")
 os.system("mkdir userplugins")
 os.chdir(cwd)
 os.system("plugins")
-
-print("Finished Install")
 menu()
