@@ -150,7 +150,8 @@ def update():
     iterator = 1
     if dir_names == []:
         print("None to update")
-        exit(0)
+        input(" ")
+        menu()
     print("Update")
     print("1 >> All")
     for name in dir_names:
@@ -206,7 +207,8 @@ def uninstall():
     iterator = 1
     if dir_names == []:
         print("None to uninstall")
-        exit(0)
+        input(" ")
+        menu()
     print("Uninstall")
     print("1 >> All")
     for name in dir_names:
