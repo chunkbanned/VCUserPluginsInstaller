@@ -105,11 +105,11 @@ def install():
         if not os.path.exists(cwd + "\\list.txt"):
             print("<ERROR> 'list.txt' does not exist! Program exiting.")
             exit(0)
-        with open('..\\..\\..\\list.txt', "r") as file:
-            file_content = file.readlines()
-            file_content.remove("\n")
-            for line in file_content:
-                if ";" not in line:
+        with open(cwd + "\\list.txt", 'r') as file:
+            for line in file:
+                line = line.strip()
+                if not line.startswith(';') and line:
+                    print(f"Cloning repository: {line}")
                     os.system("git clone " + line)
     else:
         os.system("git clone " + url)
