@@ -2,7 +2,8 @@
 
 This script will help people install custom plugins to Vencord.
 
-## I do not take responsibility for any inconveniences that may happen when using this script, you use this script at your own risk
+> [!CAUTION]
+> I do not hold responsibility for any inconveniences which may happen whilst using this program. Custom Plugins are not verified by Vencord Staff, some plugins may lead to your Discord Account being stolen or worse! So, please check through each plugin you install!
 
 ## Requirements
 
